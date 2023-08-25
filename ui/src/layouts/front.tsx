@@ -1,10 +1,9 @@
 import AuthorCard from '@/components/AuthorCard';
 import CategoryCard from '@/components/CategoryCard';
 import TagCard from '@/components/TagCard';
-import { getToken, removeToken } from '@/utils/auth';
 import { MyIcon } from '@/utils/icon';
 import { CloseOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
-import { NavLink, Outlet, useNavigate } from '@umijs/max';
+import { NavLink, Outlet, useModel, useNavigate } from '@umijs/max';
 import {
   Layout as AntdLayout,
   Button,
@@ -33,6 +32,8 @@ const Layout: React.FC = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const { isLogin, logout } = useModel('userModel');
+
   const items: MenuProps['items'] = [
     {
       label: <div onClick={() => navigate('/admin')}>进入后台</div>,
@@ -43,7 +44,7 @@ const Layout: React.FC = () => {
         <div
           onClick={() => {
             message.success('退出成功');
-            removeToken();
+            logout();
           }}
         >
           退出登录
@@ -89,8 +90,8 @@ const Layout: React.FC = () => {
               ))}
             </Row>
           </Col>
-          <Col xs={{ span: 1, offset: 18 }} lg={{ span: 1, offset: 4 }}>
-            {getToken() ? (
+          <Col xs={{ span: 2, offset: 17 }} lg={{ span: 1, offset: 4 }}>
+            {isLogin ? (
               <Dropdown
                 menu={{ items }}
                 trigger={['click']}
@@ -100,7 +101,11 @@ const Layout: React.FC = () => {
                 <UserOutlined style={{ fontSize: '20px' }} />
               </Dropdown>
             ) : (
-              <Button type="link" onClick={() => navigate('/login')}>
+              <Button
+                type="link"
+                onClick={() => navigate('/login')}
+                className="p-0"
+              >
                 登录
               </Button>
             )}
@@ -140,7 +145,7 @@ const Layout: React.FC = () => {
             ))}
           </Space>
         </Drawer>
-        <Row gutter={[20, 20]} className="w-full">
+        <Row gutter={[20, 20]} className="w-full" style={{ margin: 0 }}>
           <Col offset={2} xs={20} lg={15}>
             <Outlet />
           </Col>

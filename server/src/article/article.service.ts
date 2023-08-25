@@ -13,10 +13,10 @@ import { Article } from './entities/article.entity';
 import { Page } from 'src/common/Page';
 import { Client } from 'minio';
 import { nanoid } from 'nanoid';
-import { MINIO_CONFIG } from 'src/config/config';
 import { Category } from '../category/entities/category.entity';
 import { Tag } from '../tag/entities/tag.entity';
 import * as dayjs from 'dayjs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ArticleService {
@@ -24,6 +24,7 @@ export class ArticleService {
     @InjectRepository(Article)
     private articleRepository: Repository<Article>,
     @Inject('MINIO') private readonly minioClient: Client,
+    private configService: ConfigService,
   ) {}
 
   async save(file: Express.Multer.File, saveArticleDto: SaveArticleDto) {
@@ -31,7 +32,7 @@ export class ArticleService {
     if (file) {
       const uuid = nanoid();
       await this.minioClient.putObject(
-        MINIO_CONFIG.MINIO_BUCKET,
+        this.configService.get<string>('MINIO_BUCKET'),
         uuid,
         file.buffer,
         {

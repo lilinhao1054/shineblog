@@ -3,8 +3,8 @@ import { Setting } from './entities/setting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Client } from 'minio';
-import { MINIO_CONFIG } from 'src/config/config';
 import { nanoid } from 'nanoid';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SettingService {
@@ -12,6 +12,7 @@ export class SettingService {
     @InjectRepository(Setting)
     private settingRepository: Repository<Setting>,
     @Inject('MINIO') private readonly minioClient: Client,
+    private configService: ConfigService,
   ) {}
 
   async find() {
@@ -23,7 +24,7 @@ export class SettingService {
     if (file) {
       const uuid = nanoid();
       await this.minioClient.putObject(
-        MINIO_CONFIG.MINIO_BUCKET,
+        this.configService.get<string>('MINIO_BUCKET'),
         uuid,
         file.buffer,
         {

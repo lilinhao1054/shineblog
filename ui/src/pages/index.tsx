@@ -20,7 +20,7 @@ const Home: React.FC = () => {
 
   return (
     <Space direction="vertical" size={'large'} className="w-full">
-      <Row gutter={[20, 20]} className="w-full">
+      <Row gutter={[20, 20]} className="w-full" style={{ margin: 0 }}>
         {articles?.records.map((item) => (
           <Col
             key={item.id}

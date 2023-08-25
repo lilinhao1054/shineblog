@@ -22,7 +22,7 @@ interface ResponseStructure {
 // 运行时配置
 export const request: RequestConfig<ResponseStructure> = {
   // 统一的请求设定
-  timeout: 10000,
+  timeout: 1000 * 300,
 
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
@@ -93,9 +93,11 @@ export const request: RequestConfig<ResponseStructure> = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      let url = 'http://localhost:3000';
+      let url = process.env.API_SERVER as string;
+
       if (location.pathname.startsWith('/admin')) url += '/admin';
       url += config.url;
+
       return {
         ...config,
         url,

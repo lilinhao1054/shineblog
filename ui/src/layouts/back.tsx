@@ -1,5 +1,4 @@
 import withAuth from '@/hocs/withAuth';
-import { removeToken } from '@/utils/auth';
 import { MyIcon } from '@/utils/icon';
 import {
   DesktopOutlined,
@@ -15,7 +14,7 @@ import {
   TagOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Outlet, useNavigate } from '@umijs/max';
+import { Outlet, useModel, useNavigate } from '@umijs/max';
 import {
   Affix,
   Button,
@@ -83,6 +82,8 @@ const App: React.FC = () => {
     }
   };
 
+  const { logout } = useModel('userModel');
+
   const items: MenuProps['items'] = [
     {
       key: '1',
@@ -90,7 +91,7 @@ const App: React.FC = () => {
         <div
           onClick={() => {
             message.success('退出成功');
-            removeToken();
+            logout();
             navigate('/login');
           }}
         >

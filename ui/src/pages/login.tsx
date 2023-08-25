@@ -1,16 +1,17 @@
 import { login } from '@/services/UserController';
-import { setToken } from '@/utils/auth';
 import { MyIcon } from '@/utils/icon';
 import { LeftOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useNavigate } from '@umijs/max';
+import { useModel, useNavigate } from '@umijs/max';
 import { Button, Divider, Form, Input, message } from 'antd';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { login: modelLogin } = useModel('userModel');
   const onFinish = (values: any) => {
     login(values).then(async (res) => {
       message.success('登录成功');
-      setToken(res.access_token);
+
+      modelLogin(res.access_token);
       navigate('/admin');
     });
   };
